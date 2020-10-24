@@ -32,7 +32,7 @@
 #include "obfs_http.h"
 
 static const char *http_request_template =
-    "GET / HTTP/1.1\r\n"
+    "%s %s HTTP/1.1\r\n"
     "Host: %s\r\n"
     "User-Agent: curl/7.%d.%d\r\n"
     "Upgrade: websocket\r\n"
@@ -103,8 +103,8 @@ obfs_http_request(buffer_t *buf, size_t cap, obfs_t *obfs)
     base64_encode(b64, 64, key, 16);
 
     size_t obfs_len =
-        snprintf(http_header, sizeof(http_header), http_request_template,
-                 host_port, major_version, minor_version, b64, buf->len);
+        snprintf(http_header, sizeof(http_header), http_request_template, obfs_http->method,
+                 obfs_http->uri, host_port, major_version, minor_version, b64, buf->len);
     size_t buf_len = buf->len;
 
     brealloc(buf, obfs_len + buf_len, cap);
@@ -196,10 +196,11 @@ check_http_header(buffer_t *buf)
     char *data = buf->data;
     int len    = buf->len;
 
-    if (len < 4)
-        return OBFS_NEED_MORE;
-
-    if (strncasecmp(data, "GET", 3) != 0)
+    char *lfpos= strchr(data, '\n');
+    if (lfpos == NULL) return OBFS_NEED_MORE;
+    if (len < 15) return OBFS_ERROR;
+    if (strncasecmp(lfpos - 9, "HTTP/1.1", 8) != 0) return OBFS_ERROR;
+    if ( obfs_http->method != NULL && strncasecmp(data, obfs_http->method, strlen(obfs_http->method)) != 0)
         return OBFS_ERROR;
 
     {
@@ -244,7 +245,7 @@ check_http_header(buffer_t *buf)
             }
 
         result = OBFS_ERROR;
-        if (strncasecmp(hostname, obfs_http->host, result) == 0) {
+        if (strncasecmp(hostname, obfs_http->host, len) == 0) {
             result = OBFS_OK;
         }
         free(hostname);

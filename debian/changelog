@@ -1,3 +1,15 @@
+simple-obfs (0.0.5-1) unstable; urgency=medium
+
+  * Fix the building issue on Windows.
+
+ -- Max Lv <max.c.lv@gmail.com>  Thu, 16 Nov 2017 18:04:07 +0800
+
+simple-obfs (0.0.4-1) unstable; urgency=medium
+
+  * Minor bug fixes.
+
+ -- Max Lv <max.c.lv@gmail.com>  Mon, 06 Nov 2017 14:52:48 +0800
+
 simple-obfs (0.0.3-1) unstable; urgency=medium
 
   * Add failover option.

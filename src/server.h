@@ -27,9 +27,12 @@
 #include <time.h>
 #include <libcork/ds.h>
 
+#ifdef __MINGW32__
+#include "win32.h"
+#endif
+
 #include "encrypt.h"
 #include "jconf.h"
-#include "resolv.h"
 
 #include "common.h"
 
@@ -51,8 +54,6 @@ typedef struct server_ctx {
     struct server *server;
 } server_ctx_t;
 
-struct query;
-
 typedef struct server {
     int fd;
     int stage;
@@ -68,15 +69,8 @@ typedef struct server {
     struct listen_ctx *listen_ctx;
     struct remote *remote;
 
-    struct query *query;
-
     struct cork_dllist_item entries;
 } server_t;
-
-typedef struct query {
-    server_t *server;
-    char hostname[257];
-} query_t;
 
 typedef struct remote_ctx {
     ev_io io;
@@ -86,6 +80,10 @@ typedef struct remote_ctx {
 
 typedef struct remote {
     int fd;
+#ifdef TCP_FASTOPEN_WINSOCK
+    OVERLAPPED olap;
+    int connect_ex_done;
+#endif
     buffer_t *buf;
     struct remote_ctx *recv_ctx;
     struct remote_ctx *send_ctx;

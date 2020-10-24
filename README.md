@@ -1,10 +1,12 @@
 # simple-obfs
 
+Deprecated. Followed by [v2ray-plugin](https://github.com/shadowsocks/v2ray-plugin).
+
 ## Intro
 
-Simple-obfs is a simple obfusacting tool, designed as plugin server of shadowsocks.
+Simple-obfs is a simple obfuscating tool, designed as plugin server of shadowsocks.
 
-Current version: 0.0.3 | [Changelog](Changes)
+Current version: 0.0.5 | [Changelog](Changes)
 
 ## Build
 For Unix-like systems, especially Debian-based systems,
@@ -12,11 +14,13 @@ e.g. Ubuntu, Debian or Linux Mint, you can build the binary like this:
 
 ```bash
 # Debian / Ubuntu
-sudo apt-get install --no-install-recommends build-essential autoconf libtool libssl-dev libpcre3-dev libc-ares-dev libev-dev asciidoc xmlto automake
+sudo apt-get install --no-install-recommends build-essential autoconf libtool libssl-dev libpcre3-dev libev-dev asciidoc xmlto automake
 # CentOS / Fedora / RHEL
-sudo yum install gcc autoconf libtool automake make zlib-devel openssl-devel asciidoc xmlto
+sudo yum install gcc autoconf libtool automake make zlib-devel openssl-devel asciidoc xmlto libev-devel
 # Arch
 sudo pacman -Syu gcc autoconf libtool automake make zlib openssl asciidoc xmlto
+# Alpine
+apk add gcc autoconf make libtool automake zlib-dev openssl asciidoc xmlto libpcre32 libev-dev g++ linux-headers
 
 git clone https://github.com/shadowsocks/simple-obfs.git
 cd simple-obfs
@@ -68,11 +72,11 @@ Only applicable on the server:
 
 ```bash
 # HTTP only with plugin mode
-ss-server -c config.json --plugin obfs-server --plugin-opts "obfs=http;failover=example.com"
+ss-server -c config.json --plugin obfs-server --plugin-opts "obfs=http;failover=example.com:80"
 
 # Both HTTP and HTTPS with standalone mode
-obfs-server -s server_ip -p 80 --obfs http -r 127.0.0.1:8388 --failover example.com
-obfs-server -s server_ip -p 443 --obfs tls -r 127.0.0.1:8388 --failover example.com
+obfs-server -s server_ip -p 80 --obfs http -r 127.0.0.1:8388 --failover example.com:80
+obfs-server -s server_ip -p 443 --obfs tls -r 127.0.0.1:8388 --failover example.com:443
 
 # suppose you have an HTTP webserver (apache/nginx/whatever) listening on localhost:8080 and HTTPS on 8443
 # (you probably shouldn't expose these ports)

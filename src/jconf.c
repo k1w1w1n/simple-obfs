@@ -184,6 +184,10 @@ read_jconf(const char *file)
                 conf.obfs = to_string(value);
             } else if (strcmp(name, "obfs_host") == 0) {
                 conf.obfs_host = to_string(value);
+            } else if (strcmp(name, "obfs_uri") == 0) {
+                conf.obfs_uri = to_string(value);
+            } else if (strcmp(name, "http_method") == 0) {
+                conf.http_method = to_string(value);
             } else if (strcmp(name, "failover") == 0) {
                 conf.failover = to_string(value);
             } else if (strcmp(name, "fast_open") == 0) {

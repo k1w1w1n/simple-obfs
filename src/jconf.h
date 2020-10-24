@@ -51,6 +51,8 @@ typedef struct {
     char *user;
     char *obfs;
     char *obfs_host;
+    char *obfs_uri;
+    char *http_method;
     char *failover;
     int fast_open;
     int nofile;
